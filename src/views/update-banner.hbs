@@ -1,0 +1,46 @@
+<div class="m-auto" style="width: 600px;">
+    <h2 class="text-center my-5">Cập nhật banner</h2>
+    <form id="myForm" method="post" action="/banner/update-banner/{{banner._id}}" enctype="multipart/form-data">
+
+        <div class="form-group my-2 d-flex flex-column">
+            <label for="image">Hình ảnh</label>
+            <img class="border my-2" src="{{banner.image}}" style="width: 230px;height: 100px;" alt="Lỗi hiển thị!"
+                id="preview-image" />
+            <input type="file" class="form-control-file" name="image" id="image" accept="image/*"
+                onchange="previewImage(event);">
+        </div>
+
+        <div class="form-group my-2">
+            <label for="event">Mã sự kiện:</label>
+            <input type="text" class="form-control my-1" id="event" placeholder="Enter event" name="event"
+                value="{{banner.event}}" required>
+        </div>
+
+
+
+
+        <div class="form-group" hidden>
+            <input type="text" name="old" value="{{banner.image}}">
+        </div>
+        <button type="submit" class="btn btn-success col-3 col-lg-12 my-3">Submit</button>
+
+
+    </form>
+</div>
+
+<script>
+    function previewImage(event) {
+        var input = event.target;
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                var image = document.getElementById("preview-image");
+                image.src = e.target.result;
+                image.style.display = "block";
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+
+</script>
