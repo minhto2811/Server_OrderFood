@@ -1,7 +1,7 @@
 const Banner = require('../models/Banner');
 const fs = require('fs');
 const path = require('path');
-const { uploadImage } = require('../config/firebaseUploader');
+const { uploadImage, deleteImage } = require('../config/firebaseUploader');
 
 class ApiController {
     getBanner(req, res) {
@@ -41,24 +41,33 @@ class ApiController {
             .catch((err) => res.json(err));
 
     }
-    updateBanner(req, res) {
+    async updateBanner(req, res) {
         const id = req.params.id;
         const bannerData = req.body;
         if (req.file != null) {
-            bannerData.image = "/images/banner/" + req.file.filename;
+            const filename = req.file.filename;
+            const filepath = req.file.path;
+            await deleteImage(bannerData.old)
+                .then(() => console.log('>>> Xóa ảnh cũ thành công'))
+                .catch((err) => console.log('>>> Xóa ảnh cũ thất bại'));
+            delete bannerData.old;
+            await uploadImage(filepath, filename)
+                .then((url) => {
+                    bannerData.image = url;
+                    Banner.findByIdAndUpdate(id, bannerData)
+                        .then(() => res.redirect('/banner/get-banner'))
+                        .catch((err) => res.json(err));
+                }).catch((err) => res.json(err));
         } else {
             bannerData.image = bannerData.old;
-        }
-        const imagePath = path.join(__dirname, '../public', bannerData.old);
-        fs.unlink(imagePath, (err) => {
-            if (err) {
-                console.error(err);
-            }
             delete bannerData.old;
             Banner.findByIdAndUpdate(id, bannerData)
                 .then(() => res.redirect('/banner/get-banner'))
                 .catch((err) => res.json(err));
-        });
+        }
+
+
+
     }
 
 
@@ -66,13 +75,15 @@ class ApiController {
         const id = req.params.id;
         Banner.findByIdAndDelete(id)
             .then((banner) => {
-                const imagePath = path.join(__dirname, '../public', banner.image);
-                fs.unlink(imagePath, (err) => {
-                    if (err) {
-                        console.error(err);
-                    }
-                    res.redirect('/banner/get-banner');
-                });
+                const imageUrl = banner.image;
+                console.log('>>>' + imageUrl);
+                deleteImage(imageUrl)
+                    .then(() => {
+                        res.redirect('/banner/get-banner');
+                    })
+                    .catch(err => {
+                        res.json(err);
+                    });
             })
             .catch((err) => res.json(err));
     }
