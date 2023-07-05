@@ -9,7 +9,6 @@ var path = require('path');
 
 var app = express();
 
-app.use(express.static(path.join(__dirname, '/src/public')));
 app.engine('.hbs', expressHbs.engine({
     extname: '.hbs',
     defaultLayout:'main',

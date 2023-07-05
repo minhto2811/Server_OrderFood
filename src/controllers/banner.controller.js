@@ -1,6 +1,7 @@
 const Banner = require('../models/Banner');
 const fs = require('fs');
 const path = require('path');
+const { uploadImage } = require('../config/firebaseUploader');
 
 class ApiController {
     getBanner(req, res) {
@@ -19,10 +20,16 @@ class ApiController {
 
     addBanner(req, res) {
         const bannerData = req.body;
-        bannerData.image = "/images/banner/" + req.file.filename;
-        Banner.create(bannerData)
-            .then(() => res.redirect('/banner/get-banner'))
-            .catch((err) => res.json(err));
+        const filename = req.file.filename;
+        const filepath = req.file.path;
+        uploadImage(filepath, filename)
+            .then((url) => {
+                bannerData.image = url;
+                Banner.create(bannerData)
+                    .then(() => res.redirect('/banner/get-banner'))
+                    .catch((err) => res.json(err));
+            }).catch((err) => res.json(err));
+
     }
 
     UIupdateBanner(req, res) {

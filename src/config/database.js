@@ -6,9 +6,9 @@ async function connect() {
     try {
         await mongoose.connect(URI_MONGODB, { useNewUrlParser: true,
         useUnifiedTopology: true });
-        console.log('kết nối databse thành công');
+        console.log(`kết nối databse thành công ${URI_MONGODB}`);
     } catch (error) {
-        console.log('kết nối databse thất bại');
+        console.log(`kết nối databse thất bại ${URI_MONGODB}`);
     }
 
 }
