@@ -47,9 +47,7 @@ class ApiController {
         if (req.file != null) {
             const filename = req.file.filename;
             const filepath = req.file.path;
-            await deleteImage(bannerData.old)
-                .then(() => console.log('>>> Xóa ảnh cũ thành công'))
-                .catch((err) => console.log('>>> Xóa ảnh cũ thất bại'));
+            await deleteImage(bannerData.old);
             delete bannerData.old;
             await uploadImage(filepath, filename)
                 .then((url) => {
@@ -76,7 +74,6 @@ class ApiController {
         Banner.findByIdAndDelete(id)
             .then((banner) => {
                 const imageUrl = banner.image;
-                console.log('>>>' + imageUrl);
                 deleteImage(imageUrl)
                     .then(() => {
                         res.redirect('/banner/get-banner');

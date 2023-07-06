@@ -13,7 +13,8 @@
             <th class="text-center">Hình ảnh</th>
             <th class="text-center">UserID</th>
             <th class="text-center">Tên</th>
-             <th class="text-center">SDT</th>
+            <th class="text-center">Số điện thoại</th>
+            <th class="text-center">Hành động</th>
         </tr>
     </thead>
     <tbody>
@@ -21,15 +22,15 @@
         {{#each users}}
         <tr>
             <td class="text-center">{{sum @index}}</td>
-            <td class="text-center"><img src="{{this.image}}" style="width: 230px;height: 100px;" /></td>
+            <td class="text-center"><img src="{{this.image}}" style="width: 100px;height: 100px;" /></td>
             <td class="text-center">{{this.userID}}</td>
-             <td class="text-center">{{this.fullname}}</td>
-              <td class="text-center">{{this.numberphone}}</td>
+            <td class="text-center">{{this.fullname}}</td>
+            <td class="text-center">{{this.numberphone}}</td>
 
             <td class="text-center">
                 <button type="button" class="btn btn-danger btn-sm mr-2" data-bs-toggle="modal"
                     data-bs-target="#deleteModal" data-bs-id="{{this._id}}">Xóa</button>
-                <a href="/banner/update-banner/{{this._id}}"> <button type="button"
+                <a href="/user/update-user/{{this._id}}"> <button type="button"
                         class="btn btn-primary btn-sm ms-3">Sửa</button></a></button>
             </td>
         </tr>
@@ -51,7 +52,7 @@
 
 {{!-- form hidden --}}
 
-<form method="post" name="delete-banner-form"></form>
+<form method="post" name="delete-user-form"></form>
 
 
 
@@ -61,15 +62,15 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">Xóa banner</h1>
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Xóa user</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                Bạn có muốn xóa thông tin banner này?
+                Bạn có muốn xóa thông tin user này?
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Quay lại</button>
-                <button type="button" class="btn btn-primary" id="btn-delete-banner">Tiếp tục</button>
+                <button type="button" class="btn btn-primary" id="btn-delete-user">Tiếp tục</button>
             </div>
         </div>
     </div>
@@ -78,7 +79,7 @@
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             var id;
-            var deleteForm = document.forms['delete-banner-form'];
+            var deleteForm = document.forms['delete-user-form'];
 
             const deleteModal = document.getElementById('deleteModal')
             deleteModal.addEventListener('show.bs.modal', event => {
@@ -86,9 +87,9 @@
                 id = button.getAttribute('data-bs-id');
             })
 
-            var btn_del = document.getElementById('btn-delete-banner');
+            var btn_del = document.getElementById('btn-delete-user');
             btn_del.onclick = function () {
-                deleteForm.action = '/banner/delete-banner/' + id;
+                deleteForm.action = '/user/delete-user/' + id;
                 deleteForm.submit();
             }
         });
